@@ -1,9 +1,9 @@
 #include "sem.h"
 #define PORTS 10
-#define MESSAGES 15
+#define MESSAGES 16
 
 typedef struct message{
-  int m[15];
+  int m[16];
   int metaData[2];
   // metaData[0] -> port Number
   // metaData[1] -> communication codes
@@ -14,6 +14,7 @@ typedef struct message{
   // 3 -> client limit Violation
   // 4 -> filename limit Violation
   // 5 -> successfully sent
+  // 6 -> free port
 }message;
 
 typedef struct port{

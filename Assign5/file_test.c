@@ -11,6 +11,7 @@
 #define CLIENT_LIMIT_VIOLATION    3
 #define FILENAME_LIMIT_VIOLATION  4
 #define SUCCESSFULLY_SENT         5
+#define SEND_COMPLETE             6
 
 void server(char *charArr);
 void client(char *fileLocation);
@@ -86,6 +87,8 @@ void client(char *fileLocation)
       printf("\n Client # %d sending data on port %d",Id,SERVER_PORT);
       send(SERVER_PORT,*mess);
       message received       = receive(portVar);
+      //printf("here...................... %d \n",received.metaData[1]);
+      sleep(10);
 
       if (received.metaData[1] == CLIENT_LIMIT_VIOLATION)
       {
@@ -145,7 +148,7 @@ void client(char *fileLocation)
   }
 
 
-  if (clientLimitViolation != 1 || fileNameViolation != 1)
+  if (clientLimitViolation != 1 && fileNameViolation != 1)
   {
     FILE *fp = fopen(fileLocation,"rb");
     char c;
@@ -194,6 +197,7 @@ void client(char *fileLocation)
   }
 
   free(mess);
+
 
   while(1)
   {
@@ -248,6 +252,9 @@ void server(char *charArr)
       if ( ports[i] == clientPort ){
         fileIdx     = i;
         isPortFound = 1;
+        if(receivedMessage.metaData[1] == SEND_COMPLETE){
+          ports[fileI]
+        }
         break;
       }
     }
@@ -276,13 +283,15 @@ void server(char *charArr)
         z++;
       }
       int x=0;
-      for( x=0 ; x<10 && receivedMessage.m[x] != '\0' ; x++)
+      for( x=0 ; x<16 && receivedMessage.m[x] != '\0' ; x++)
       {
         if(z > 14)
         {
           fileNameViolation = 1;
           break;
         }
+        //printf("\n z %d %d \n",z,receivedMessage.m[x]);
+        //sleep(1);
         files[fileIdx][z++] = receivedMessage.m[x];
       }
 
@@ -354,6 +363,7 @@ void server(char *charArr)
   sendMessage->m[newIter] = '\0';
   printf("\n Server sending data on port # %d \n",receivedMessage.metaData[0]);
   send(receivedMessage.metaData[0],*sendMessage);
+
   free(sendMessage);
 
   }
