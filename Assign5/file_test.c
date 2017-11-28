@@ -167,6 +167,7 @@ void client(char *fileLocation)
 
         if (response.metaData[1] == FILE_SIZE_VIOLATION)
         {
+          printf("\n File size overshoot... \n");
           fileSizeViolation = 1;
           break;
         }
